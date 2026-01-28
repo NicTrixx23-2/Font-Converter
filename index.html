@@ -2,12 +2,14 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Custom Font Text Tool</title>
+  <title>Stray Font Text Tool</title>
 
   <style>
+    /* === Custom Font === */
     @font-face {
-      font-family: "StrayScript";
-      src: url("font.otf") format("opentype");
+      font-family: "StrayFont";
+      src: url("font.otf") format("opentype"),
+           url("font.ttf") format("truetype");
       font-weight: normal;
       font-style: normal;
     }
@@ -16,7 +18,8 @@
       margin: 0;
       padding: 20px;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f4f6f8;
+      background: #0f1115;
+      color: #e6e6e6;
     }
 
     h1 {
@@ -32,46 +35,90 @@
 
     textarea {
       width: 100%;
-      height: 300px;
+      height: 280px;
       padding: 12px;
       font-size: 16px;
       border-radius: 6px;
-      border: 1px solid #ccc;
+      border: 1px solid #333;
       resize: vertical;
       box-sizing: border-box;
+      background: #1a1d24;
+      color: #fff;
     }
 
     #output {
-      font-family: "StrayScript", sans-serif;
-      background: #ffffff;
+      font-family: "StrayFont", sans-serif;
+      white-space: pre-wrap;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 12px;
+      min-height: 280px;
+      background: #12141a;
+      color: #fff;
+      overflow-y: auto;
     }
 
-    .hint {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #666;
+    .actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button {
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: none;
+      background: #00ffd5;
+      color: #000;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .status {
+      font-size: 13px;
+      color: #9aa0a6;
     }
   </style>
 </head>
 <body>
 
-  <h1>Text → Custom Font Preview</h1>
+  <h1>Stray Schrift – Text Generator</h1>
 
   <div class="container">
-    <textarea id="input" placeholder="Text hier eingeben..."></textarea>
-    <textarea id="output" placeholder="Output mit Custom Font"></textarea>
+    <textarea id="input" placeholder="Text hier eingeben (z. B. HALLO)"></textarea>
+    <div id="output"></div>
   </div>
 
-  <div class="hint">
-    Hinweis: Der Custom Font wird nur im Output-Feld dargestellt.
+  <div class="actions">
+    <button id="copyBtn">Output kopieren</button>
+    <span class="status" id="status"></span>
   </div>
 
   <script>
     const input = document.getElementById("input");
     const output = document.getElementById("output");
+    const copyBtn = document.getElementById("copyBtn");
+    const status = document.getElementById("status");
 
     input.addEventListener("input", () => {
-      output.value = input.value;
+      output.textContent = input.value;
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(output.textContent);
+        status.textContent = "Text im Clipboard";
+        setTimeout(() => status.textContent = "", 2000);
+      } catch (err) {
+        status.textContent = "Kopieren nicht erlaubt";
+        alert("Fehlgeschlagen!");
+      }
     });
   </script>
 
